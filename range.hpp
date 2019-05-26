@@ -1,46 +1,72 @@
 #pragma once
-
 #include <iostream>
 
-using namespace std;
+namespace itertools
+{
+template<typename T>
+class range{
 
-namespace itertools {
-    template<typename T> 
-    class range{
+    private:
+    T _start;
+    T _end;
 
+    public:
+    range(const T start,const T end):
+    _start(start),_end(end)
+    {}
+
+class iterator{
+    private:
+    T current;
+
+    public:
+    //constructor
+    iterator(T o):
+        current(o)
+    {}
+
+    iterator& operator ++(){
+       current++;
+       return *this;
+    }
+
+    bool operator ==(const iterator& e) const{
+       return current == e.current;
+    }
+
+    bool operator !=(const iterator& t0)const{
+        return current != t0.current;
+    }
+
+    auto operator *(){
+        return current;
+    }
+};
+
+        /*
+
+    class pair{
         private:
-            T _begin;
-            T _end;
+        typename K k;
+        typename E e;
+
         public:
-        //constructor
-        range(const T begin,const T end) : _begin(begin),_end(end){} 
+        pair(const range& r):
+        k(r.t1),e(r.t2){}
 
-        //operators: to behave like iterator, we need: ++(increment) , *(access) , !=(not equal)
-        class iterator{
-            private:
-                T curr; //the current iterator.
-            public:
-            iterator(T element): curr(element){}
+    };
 
-            T operator*() const {
-                 return curr;
-            }
-                 
-            iterator &operator ++(){ 
-                ++curr;
-                return *this;
-                }
-
-            bool operator ==(iterator const& other) const { return curr == other.curr;}
-
-            bool operator !=(iterator const& other) const { return curr != other.curr;}
-
-        };
-        //begin and end function, will return the iterator of range<T>
-        iterator begin() const { return iterator(_begin); } //for iterator_to_string function this MUST be const.
-        iterator end() const { return iterator(_end);} 
+    */
+    iterator begin() const{
+    return iterator(_start);
+    }
+    iterator end() const{
+    return iterator(_end);
+    }
 
 
-        };
-    
+
+};
 }
+
+

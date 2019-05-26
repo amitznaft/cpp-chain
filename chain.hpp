@@ -1,73 +1,66 @@
-#pragma once
-
-#include <iostream>
+#include "range.hpp"
 
 using namespace std;
 
-namespace itertools
-{
-    template <typename T, typename V>
-    class chain{ //might be of the form chain< range<char>, string> but iterator should return type char.
-        private:
+namespace itertools{
 
-            T firstContainer;
-            V secondContainer;
-        public:
-            template <typename U, typename W>
-            class iterator{ //inner class. should behave like iterator.
-            private:
-                U firstContainerIt; //the iterator for the first container.
-                W secondContainerIt; //the iterator for the second container.
-                bool keepIteratingFirst; //indicates if we finished iterating the first container. (true = keep iterating first container.)
+template <typename T,typename E>
+ class chain{
+     private:
+     T first;
+     E sec;
 
-            public:
-                iterator(U iteratable_A, W iteratable_B) : firstContainerIt(iteratable_A), secondContainerIt(iteratable_B), keepIteratingFirst(true) {}
+     public:
 
-                //operators: to behave like iterator, we need: ++(increment) , *(access) , !=(not equal)
-                iterator& operator++() { //prefix ++
-                    if(keepIteratingFirst){ //if we already finished the first iterator
-                         ++firstContainerIt;
-                    }else{
-                         ++secondContainerIt;
-                    }
-                    return *this;
-                }
+     chain(const T _first , const E _sec):
+     first(_first),sec(_sec){}
+    template<typename F , typename S>
+    class iterator{
 
-                auto operator* () const{   
-                    if(keepIteratingFirst){ //if we have not finished the first iterator
-                        return *firstContainerIt;
-                    }else{
-                        return *secondContainerIt;
-                    }
-                }
+    private:
+    F first_iterator; // It for the first "range"
+    S second_iterator; // It for the second "range"
+    bool first_It;  // check if the first It end to be able move correctly to second It
+    public:
 
-                bool operator!=(const chain::iterator<U,W> &other){
-                    //now check if we finished iterating the first container and should start iterating the second container:
-                    if (!(firstContainerIt != other.firstContainerIt)){
-                        if(keepIteratingFirst){
-                            keepIteratingFirst = false;
-                        }
-                    }
-                    if(keepIteratingFirst){
-                        return (firstContainerIt != other.firstContainerIt);
-                    }
-                    else{
-                        return (secondContainerIt != other.secondContainerIt);
-                    }
-                }
-            }; //iterator inner class.
+    iterator(F _first , S _sec):
+        first_iterator(_first),second_iterator(_sec) , first_It(true)
+    {}
 
-           chain<T,V>(const T a, const V b): firstContainer(a), secondContainer(b){} //constructor
+    iterator& operator ++(){
+    if(first_It){first_iterator++;} // if we have more values in the first It
+    else {second_iterator++;}
+    }
 
-           //begin and end functions
-            auto begin() const{
-                return iterator<decltype(firstContainer.begin()), decltype(secondContainer.begin())>(firstContainer.begin(), secondContainer.begin());
-            }
+    bool operator !=(const chain::iterator<F,S>& o){ // in this operator function we can check if we cover all the first It
+       if(!(first_iterator != o.first_iterator)){ // when we run on for loop e.g (iterator i = ... ; i != something.end ...) so if they equal its mens we can move to It2
+          first_It = false;
+       }
+       if(first_It){return first_iterator != o.first_iterator;}
+       else{return second_iterator != o.second_iterator;}
+    }
 
-            auto end() const{
-                return iterator<decltype(firstContainer.end()), decltype(secondContainer.end())>(firstContainer.end(), secondContainer.end());
-            }
+    auto operator *(){
+        if (first_It) // if we have more values in the first It
+        {
+            return *first_iterator;
+        }
+        else
+        {
+            return *second_iterator;
+        }
+        }
 
-        };    
-}; // namespace itertools
+        };
 
+    auto begin()const{
+            return iterator<T,E>(first.begin(), sec.begin());
+        }
+    auto end()const{
+            return iterator<T,E>(first.end(), sec.end());
+        }
+
+
+ };
+
+}
