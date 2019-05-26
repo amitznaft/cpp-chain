@@ -7,8 +7,8 @@ template<typename T>
 class range{
 
     private:
-    T _start;
-    T _end;
+  const T _start;
+  const T _end;
 
     public:
     range(const T start,const T end):
@@ -38,25 +38,11 @@ class iterator{
         return current != t0.current;
     }
 
-    auto operator *(){
+    T operator *(){
         return current;
     }
 };
 
-        /*
-
-    class pair{
-        private:
-        typename K k;
-        typename E e;
-
-        public:
-        pair(const range& r):
-        k(r.t1),e(r.t2){}
-
-    };
-
-    */
     iterator begin() const{
     return iterator(_start);
     }
@@ -64,9 +50,10 @@ class iterator{
     return iterator(_end);
     }
 
-
-
 };
+template<typename T> range<T> range(T _start, T _end) {
+    return range<T>(_start,_end);
+}
 }
 
 
