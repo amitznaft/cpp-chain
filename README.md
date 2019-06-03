@@ -1,3 +1,3 @@
 # cpp-iterable-containers
 
-Made by Liad Cohen and Timor Sharabi.
+Made by yuval cohen
