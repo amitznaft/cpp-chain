@@ -39,7 +39,7 @@ class powerset{
         unsigned int bit = i%2; // check if bit is 1 or 0
         i = i >> 1; // move 1 bit to the right
         if(bit == 1){
-            s.emplace_back(*_start);
+            s.emplace_back(*_start); //first in first out
         }
         ++_start;
     }
